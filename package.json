@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/nftstorage-sw.js",
   "scripts": {
-    "start": "cp src/nftstorage-sw.js -o > example/nftstorage-sw.js; npx serve example",
+    "start": "cp src/nftstorage-sw.js example/nftstorage-sw.js; npx serve example",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
