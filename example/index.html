@@ -1,12 +1,24 @@
+<!DOCTYPE html>
 <html>
-  <body>
-    <img src="/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy"/>
-    <img src="https://localhost:3000/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy" />
+  <head>
+    <!-- for testing! ignore me! -->
+    <script type="module">
+      import { worker } from './mocks/browser.js'
+      worker.start()
+    </script>
 
+    <!-- DO THIS IN YOUR PAGE TOO-->
     <script type="text/javascript">
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('nftstorage-sw.js');
+        navigator.serviceWorker.register('./nftstorage-sw.js');
       }
     </script>
+
+  </head>
+  <body>
+    <!-- should fetch from nftstorage.link -->
+    <img src="/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy"/>
+    <!-- should error and fallback to dweb.link -->
+    <img src="https://nftstorage.link/ipfs/bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle/olizilla.png" alt="" />
   </body>
 </html>
