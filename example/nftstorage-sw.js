@@ -2,6 +2,24 @@ const NFTSTORAGELINK_GATEWAY_URL = 'https://nftstorage.link'
 const FALLBACK_GATEWAY_URLS = [
   'https://dweb.link'
 ]
+const OK_ERROR_STATUS = [
+  404,
+  409
+]
+
+async function getIpfs(ipfsPath) {
+  let response
+  try {
+    response = await fetch(`${NFTSTORAGELINK_GATEWAY_URL}${ipfsPath}`)
+  } catch (_) { }
+
+  if (!response || !OK_ERROR_STATUS.includes(response.status)) {
+    return await fetch(`${FALLBACK_GATEWAY_URLS[0]}${ipfsPath}`)
+  }
+
+  // Eiher successful response or service error response
+  return response
+}
 
 /*
 * An event handler called whenever a fetch event occurs
@@ -9,15 +27,6 @@ const FALLBACK_GATEWAY_URLS = [
 * @param {Fetch} event 
 */
 const onfetch = async (event) => {
-  // const url = new URL(event.request.url)
-  // switch (url.origin) {
-  //   // Only handle pages for the current origin
-  //   // Requests to other origins are left to the browser default
-  //   case location.origin: {
-  //     event.respondWith(redirectToPermenantUrl(url))
-  //   }
-  // }
-
   const path = event.request.url
   const isIpfsRequest = path.startsWith(`${self.location.origin}/ipfs/`)
 
@@ -27,18 +36,7 @@ const onfetch = async (event) => {
   }
 
   const ipfsPath = event.request.url.replace(self.location.origin, '')
-
-  let response
-  try {
-    response = await fetch(`${NFTSTORAGELINK_GATEWAY_URL}${ipfsPath}`)
-  } catch (_) {}
-
-  if (!response || response.status >= 500) {
-    return await fetch(`${FALLBACK_GATEWAY_URLS[0]}${ipfsPath}`)
-  }
-
-  // Eiher successful response or service error response
-  return response
+  return event.respondWith(getIpfs(ipfsPath))
 }
 
 /*
