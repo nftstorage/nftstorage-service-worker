@@ -28,15 +28,16 @@ async function getIpfs(ipfsPath) {
 */
 const onfetch = async (event) => {
   const path = event.request.url
-  const isIpfsRequest = path.startsWith(`${self.location.origin}/ipfs/`)
+  const url = new URL(event.request.url)
+  console.log('on fetch', path)
+  const isIpfsRequest = url.pathname.startsWith('/ipfs')
 
   // Not intercepting path
   if (!isIpfsRequest) {
     return
   }
 
-  const ipfsPath = event.request.url.replace(self.location.origin, '')
-  return event.respondWith(getIpfs(ipfsPath))
+  return event.respondWith(getIpfs(url.pathname))
 }
 
 /*
