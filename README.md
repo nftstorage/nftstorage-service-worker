@@ -1,0 +1,2 @@
+# nftstorage.link-service-worker
+
