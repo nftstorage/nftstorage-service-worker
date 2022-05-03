@@ -1,7 +1,5 @@
-const NFTSTORAGELINK_GATEWAY_URL = 'https://nftstorage.link'
-const FALLBACK_GATEWAY_URLS = [
-  'https://dweb.link'
-]
+const GATEWAY_URL = GATEWAY_URL_GLOBAL || 'https://nftstorage.link'
+const FALLBACK_URL = FALLBACK_URL_GLOBAL || 'https://dweb.link'
 const OK_ERROR_STATUS = [
   400,
   404,
@@ -10,13 +8,14 @@ const OK_ERROR_STATUS = [
 
 async function getIpfs(ipfsPath) {
   try {
-    const response = await fetch(`${NFTSTORAGELINK_GATEWAY_URL}${ipfsPath}`)
+    const response = await fetch(`${GATEWAY_URL}${ipfsPath}`)
+    console.log('rrrr', response)
     if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
       return response
     }  
   } catch (_) { }
   
-  return await fetch(`${FALLBACK_GATEWAY_URLS[0]}${ipfsPath}`)
+  return await fetch(`${FALLBACK_URL}${ipfsPath}`)
 }
 
 /*
@@ -27,7 +26,6 @@ async function getIpfs(ipfsPath) {
 const onfetch = async (event) => {
   const path = event.request.url
   const url = new URL(event.request.url)
-  console.log('on fetch', path)
   const isIpfsRequest = url.pathname.startsWith('/ipfs')
 
   // Not intercepting path

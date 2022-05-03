@@ -9,9 +9,9 @@ describe('nftstorage-sw', () => {
   })
   it('fallsback to dweb.link if nftstorage.link fails', async () => {
     const res = await fetch('/ipfs/bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle/olizilla.png')
-    assert.isOk(res.ok, 'response is ok')
-    assert.isOk(new URL(res.url).host.endsWith('dweb.link'), 'falls back to dweb.link')
     console.log(res.status, res.url)
+    assert.isOk(res.ok, 'response is ok')
+    assert.isOk(new URL(res.url).host.endsWith('localhost:9092'), 'falls back to localhost:9092')
   })
   it('doesn\'t fallsback to dweb.link if nftstorage.link fails with unrecoverable error', async () => {
     const res = await fetch('/ipfs/nope.png')
