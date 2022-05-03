@@ -1,5 +1,5 @@
-const GATEWAY_URL = GATEWAY_URL_GLOBAL || 'https://nftstorage.link'
-const FALLBACK_URL = FALLBACK_URL_GLOBAL || 'https://dweb.link'
+const GATEWAY_URL = 'https://nftstorage.link'
+const FALLBACK_URL = 'https://dweb.link'
 const OK_ERROR_STATUS = [
   400,
   404,

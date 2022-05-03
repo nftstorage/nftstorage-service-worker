@@ -1,10 +1,14 @@
+const { replace } = require('esbuild-plugin-replace')
+
 /** @type {import('playwright-test').RunnerOptions} */
 module.exports = {
   buildSWConfig: {
-    define: {
-      GATEWAY_URL_GLOBAL: JSON.stringify('http://127.0.0.1:9091'),
-      FALLBACK_URL_GLOBAL: JSON.stringify('http://127.0.0.1:9092'),
-    },
+    plugins: [
+      replace({
+        'https://nftstorage.link': 'http://127.0.0.1:9091',
+        'https://dweb.link': 'http://127.0.0.1:9092'
+      })
+    ]
   },
   beforeTests: async () => {
     console.log('starting')
@@ -14,5 +18,5 @@ module.exports = {
     /** @type {{  mock: ProcessObject }} */ beforeTests
   ) => {
     console.log('⚡️ Shutting down mock servers.')
-  },
+  }
 }
