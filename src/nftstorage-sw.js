@@ -1,6 +1,7 @@
 const { unpack } = require('ipfs-car/unpack')
 const { CarReader } = require('@ipld/car')
 
+const CAR_GATEWAY_URL = 'https://ipfs.io'
 const GATEWAY_URL = 'https://nftstorage.link'
 const FALLBACK_URL = 'https://dweb.link'
 const OK_ERROR_STATUS = [
@@ -27,7 +28,7 @@ function getIPFSPath (url) {
 
 async function getCar(ipfsPath) {
   const cid = ipfsPath.substr('/ipfs/'.length)
-  const res = await fetch(`${FALLBACK_URL}/api/v0/dag/export?arg=${cid}`, {
+  const res = await fetch(`${CAR_GATEWAY_URL}/api/v0/dag/export?arg=${cid}`, {
     method: 'POST'
   })
 
@@ -40,7 +41,7 @@ async function getCar(ipfsPath) {
     files.push(file)
   }
 
-  if (files.length > 0) {
+  if (files.length > 1) {
     return new Response('More than one file is not currently supported', {
       status: 501,
       headers: { 'Content-Type': 'text/plain' },
@@ -61,6 +62,7 @@ async function getCar(ipfsPath) {
 async function getFromIpfs(url) {
   const ipfsPath = getIPFSPath(url)
   // Get car
+
   if (url.searchParams.get('format') === 'car') {
     return getCar(ipfsPath)
   }
@@ -71,6 +73,7 @@ async function getFromIpfs(url) {
       return response
     }  
   } catch (_) { }
+  console.log('fallback url', FALLBACK_URL)
   
   return await fetch(`${FALLBACK_URL}${ipfsPath}`)
 }
@@ -92,6 +95,7 @@ async function cacheFirst(request) {
     putInCache(request, responseFromNetwork.clone())
     return responseFromNetwork
   } catch (err) {
+    console.log(err)
     // when even the fallback response is not available,
     // there is nothing we can do, but we must always
     // return a Response object
