@@ -6,6 +6,18 @@ describe('nftstorage-sw', () => {
     const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy')
     assert.isOk(res.ok, 'response is ok')
   })
+  it('caches responses', async () => {
+    const path = '/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy'
+    const res = await fetch(path)
+    assert.isOk(res.ok, 'response is ok')
+
+    const cache = await caches.open('ipfs-service-worker')
+    const keys = await cache.keys()
+    assert.strictEqual(keys.length, 1)
+
+    const reqUrl = keys[0].url
+    assert.isOk(reqUrl.includes(path))
+  })
   it('fallsback to dweb.link if nftstorage.link fails', async () => {
     const path = '/ipfs/bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle/olizilla.png'
     const res = await fetch(path)

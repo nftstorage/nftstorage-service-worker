@@ -17,6 +17,38 @@ async function getIpfs(ipfsPath) {
   return await fetch(`${FALLBACK_URL}${ipfsPath}`)
 }
 
+/**
+ * @param {Request} request
+ */
+async function cacheFirst(request) {
+  const responseFromCache = await caches.match(request)
+  if (responseFromCache) {
+    return responseFromCache
+  }
+
+  const path = (new URL(request.url)).pathname
+  try {
+    // Get from IPFS Gateways
+    const responseFromNetwork = await getIpfs(path)
+    // Add to cache
+    putInCache(request, responseFromNetwork.clone())
+    return responseFromNetwork
+  } catch (err) {
+    // when even the fallback response is not available,
+    // there is nothing we can do, but we must always
+    // return a Response object
+    return new Response('Network error happened', {
+      status: 408,
+      headers: { 'Content-Type': 'text/plain' },
+    })
+  }
+}
+
+async function putInCache(request, response) {
+  const cache = await caches.open('ipfs-service-worker')
+  await cache.put(request, response)
+}
+
 /*
 * An event handler called whenever a fetch event occurs
 * "Alternatively, simply don't call event.respondWith, which will result in default browser behaviour."
@@ -31,7 +63,7 @@ const onfetch = async (event) => {
     return
   }
 
-  return event.respondWith(getIpfs(url.pathname))
+  return event.respondWith(cacheFirst(event.request))
 }
 
 /*
