@@ -9,7 +9,6 @@ const OK_ERROR_STATUS = [
 async function getIpfs(ipfsPath) {
   try {
     const response = await fetch(`${GATEWAY_URL}${ipfsPath}`)
-    console.log('rrrr', response)
     if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
       return response
     }  
@@ -24,7 +23,6 @@ async function getIpfs(ipfsPath) {
 * @param {Fetch} event 
 */
 const onfetch = async (event) => {
-  const path = event.request.url
   const url = new URL(event.request.url)
   const isIpfsRequest = url.pathname.startsWith('/ipfs')
 

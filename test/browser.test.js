@@ -5,17 +5,16 @@ describe('nftstorage-sw', () => {
   it('fetches from nftstorage.link', async () => {
     const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy')
     assert.isOk(res.ok, 'response is ok')
-    console.log(res.status, res.url)
   })
   it('fallsback to dweb.link if nftstorage.link fails', async () => {
-    const res = await fetch('/ipfs/bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle/olizilla.png')
-    console.log(res.status, res.url)
+    const path = '/ipfs/bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle/olizilla.png'
+    const res = await fetch(path)
     assert.isOk(res.ok, 'response is ok')
-    assert.isOk(new URL(res.url).host.endsWith('localhost:9092'), 'falls back to localhost:9092')
+    assert.strictEqual(new URL(res.url).port, '9092')
   })
   it('doesn\'t fallsback to dweb.link if nftstorage.link fails with unrecoverable error', async () => {
     const res = await fetch('/ipfs/nope.png')
     assert.isNotOk(res.ok, 'response is not ok')
-    console.log(res.status, res.url)
+    assert.strictEqual(new URL(res.url).port, '9091')
   })
 })
