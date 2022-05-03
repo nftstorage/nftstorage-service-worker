@@ -1,3 +1,6 @@
+const { unpack } = require('ipfs-car/unpack')
+const { CarReader } = require('@ipld/car')
+
 const GATEWAY_URL = 'https://nftstorage.link'
 const FALLBACK_URL = 'https://dweb.link'
 const OK_ERROR_STATUS = [
@@ -24,9 +27,33 @@ function getIPFSPath (url) {
 
 async function getCar(ipfsPath) {
   const cid = ipfsPath.substr('/ipfs/'.length)
-  return await fetch(`${FALLBACK_URL}/api/v0/dag/export?arg=${cid}`, {
+  const res = await fetch(`${FALLBACK_URL}/api/v0/dag/export?arg=${cid}`, {
     method: 'POST'
   })
+
+  const arrayBuffer = await res.arrayBuffer()
+  const carReader = await CarReader.fromBytes(new Uint8Array(arrayBuffer))
+
+  const files = []
+  for await (const file of unpack(carReader)) {
+    // Iterate over files
+    files.push(file)
+  }
+
+  if (files.length > 0) {
+    return new Response('More than one file is not currently supported', {
+      status: 501,
+      headers: { 'Content-Type': 'text/plain' },
+    })
+  }
+
+  const blobParts = []
+  for await (const part of files[0].content()) {
+    blobParts.push(part)
+  }
+
+  return new Response(new Blob(blobParts))
+}
 
 /**
  * @param {URL} url

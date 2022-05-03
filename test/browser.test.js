@@ -3,8 +3,11 @@ const assert = chai.assert
 
 describe('nftstorage-sw', () => {
   it.only('fetches car from dweb.link', async () => {
-    const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy?format=car')
+    const res = await fetch('/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq?format=car')
     assert.isOk(res.ok, 'response is ok')
+
+    const text = await res.text()
+    assert.strictEqual(text, 'Hello nft.storage! 😎')
   })
   it('fetches from nftstorage.link', async () => {
     const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy')
