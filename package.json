@@ -4,16 +4,20 @@
   "description": "",
   "main": "src/nftstorage-sw.js",
   "scripts": {
-    "start": "vite example",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "vite test",
+    "_test": "playwright-test --assets test test/browser.test.js",
+    "test": "playwright-test --sw src/nftstorage-sw.js --assets test test/browser.test.js"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2",
     "msw": "^0.39.2",
+    "playwright-test": "^7.4.0",
     "vite": "^2.9.7"
   },
   "msw": {
-    "workerDirectory": "example"
+    "workerDirectory": "test"
   }
 }
