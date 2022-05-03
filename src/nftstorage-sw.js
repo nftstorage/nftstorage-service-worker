@@ -22,11 +22,22 @@ function getIPFSPath (url) {
   }
 }
 
+async function getCar(ipfsPath) {
+  const cid = ipfsPath.substr('/ipfs/'.length)
+  return await fetch(`${FALLBACK_URL}/api/v0/dag/export?arg=${cid}`, {
+    method: 'POST'
+  })
+
 /**
  * @param {URL} url
  */
-async function getIpfs(url) {
+async function getFromIpfs(url) {
   const ipfsPath = getIPFSPath(url)
+  // Get car
+  if (url.searchParams.get('format') === 'car') {
+    return getCar(ipfsPath)
+  }
+
   try {
     const response = await fetch(`${GATEWAY_URL}${ipfsPath}`)
     if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
@@ -49,7 +60,7 @@ async function cacheFirst(request) {
   const url = new URL(request.url)
   try {
     // Get from IPFS Gateways
-    const responseFromNetwork = await getIpfs(url)
+    const responseFromNetwork = await getFromIpfs(url)
     // Add to cache
     putInCache(request, responseFromNetwork.clone())
     return responseFromNetwork

@@ -2,6 +2,10 @@ import chai from 'chai'
 const assert = chai.assert
 
 describe('nftstorage-sw', () => {
+  it.only('fetches car from dweb.link', async () => {
+    const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy?format=car')
+    assert.isOk(res.ok, 'response is ok')
+  })
   it('fetches from nftstorage.link', async () => {
     const res = await fetch('/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy')
     assert.isOk(res.ok, 'response is ok')
