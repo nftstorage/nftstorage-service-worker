@@ -45,7 +45,7 @@ async function cacheFirst(request) {
 }
 
 async function putInCache(request, response) {
-  const cache = await caches.open('ipfs-service-worker')
+  const cache = await caches.open('nftstorage-sw')
   await cache.put(request, response)
 }
 

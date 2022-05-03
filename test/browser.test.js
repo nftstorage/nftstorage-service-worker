@@ -11,7 +11,7 @@ describe('nftstorage-sw', () => {
     const res = await fetch(path)
     assert.isOk(res.ok, 'response is ok')
 
-    const cache = await caches.open('ipfs-service-worker')
+    const cache = await caches.open('nftstorage-sw')
     const keys = await cache.keys()
     assert.strictEqual(keys.length, 1)
 
