@@ -1,11 +1,11 @@
-# tweaked from https://github.com/actions/starter-workflows/blob/main/ci/node.js.yml
+# tweaked from https:add//github.com/actions/starter-workflows/blob/main/ci/node.js.yml
 name: Test
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ main ]
 
 jobs:
   build:
