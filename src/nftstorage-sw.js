@@ -3,22 +3,20 @@ const FALLBACK_GATEWAY_URLS = [
   'https://dweb.link'
 ]
 const OK_ERROR_STATUS = [
+  400,
   404,
   409
 ]
 
 async function getIpfs(ipfsPath) {
-  let response
   try {
-    response = await fetch(`${NFTSTORAGELINK_GATEWAY_URL}${ipfsPath}`)
+    const response = await fetch(`${NFTSTORAGELINK_GATEWAY_URL}${ipfsPath}`)
+    if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
+      return response
+    }  
   } catch (_) { }
-
-  if (!response || !OK_ERROR_STATUS.includes(response.status)) {
-    return await fetch(`${FALLBACK_GATEWAY_URLS[0]}${ipfsPath}`)
-  }
-
-  // Eiher successful response or service error response
-  return response
+  
+  return await fetch(`${FALLBACK_GATEWAY_URLS[0]}${ipfsPath}`)
 }
 
 /*

@@ -5,8 +5,7 @@
   "main": "src/nftstorage-sw.js",
   "scripts": {
     "start": "vite test",
-    "_test": "playwright-test --assets test test/browser.test.js",
-    "test": "playwright-test --sw src/nftstorage-sw.js --assets test test/browser.test.js"
+    "test": "playwright-test --sw src/nftstorage-sw.js test/browser.test.js"
   },
   "author": "",
   "license": "MIT",
