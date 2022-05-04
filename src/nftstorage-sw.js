@@ -6,7 +6,30 @@ const OK_ERROR_STATUS = [
   409
 ]
 
-async function getIpfs(ipfsPath) {
+/**
+ * @param {URL} url
+ */
+function getIPFSPath (url) {
+  const urlString = url.toString()
+
+  // Path
+  if (urlString.includes('/ipfs/')) {
+    return url.pathname
+  }
+  
+  // Subdomain
+  if (urlString.includes('.ipfs.')) {
+    const cid = url.hostname.split('.ipfs.')[0]
+    console.log('subdomain', `/ipfs/${cid}${url.pathname}`)
+    return `/ipfs/${cid}${url.pathname}`
+  }
+}
+
+/**
+ * @param {URL} url
+ */
+async function getIpfs(url) {
+  const ipfsPath = getIPFSPath(url)
   try {
     const response = await fetch(`${GATEWAY_URL}${ipfsPath}`)
     if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
@@ -26,10 +49,10 @@ async function cacheFirst(request) {
     return responseFromCache
   }
 
-  const path = (new URL(request.url)).pathname
+  const url = new URL(request.url)
   try {
     // Get from IPFS Gateways
-    const responseFromNetwork = await getIpfs(path)
+    const responseFromNetwork = await getIpfs(url)
     // Add to cache
     putInCache(request, responseFromNetwork.clone())
     return responseFromNetwork
@@ -56,10 +79,12 @@ async function putInCache(request, response) {
 */
 const onfetch = async (event) => {
   const url = new URL(event.request.url)
+
   const isIpfsRequest = url.pathname.startsWith('/ipfs')
+  const isIpfsSubdomainRequest = url.hostname.includes('.ipfs.')
 
   // Not intercepting path
-  if (!isIpfsRequest) {
+  if (!isIpfsRequest && !isIpfsSubdomainRequest) {
     return
   }
 

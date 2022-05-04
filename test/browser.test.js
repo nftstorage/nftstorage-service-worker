@@ -29,4 +29,9 @@ describe('nftstorage-sw', () => {
     assert.isNotOk(res.ok, 'response is not ok')
     assert.strictEqual(new URL(res.url).port, '9091')
   })
+  it('fetches from nftstorage.link using subdomain', async () => {
+    const res = await fetch('https://bafybeidluj5ub7okodgg5v6l4x3nytpivvcouuxgzuioa6vodg3xt2uqle.ipfs.nftstorage.link/olizilla.png')
+    assert.isOk(res.ok, 'response is ok')
+    assert.strictEqual(new URL(res.url).port, '9092')
+  })
 })
