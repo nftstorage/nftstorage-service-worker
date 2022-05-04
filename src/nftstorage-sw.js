@@ -10,17 +10,14 @@ const OK_ERROR_STATUS = [
  * @param {URL} url
  */
 function getIPFSPath (url) {
-  const urlString = url.toString()
-
   // Path
-  if (urlString.includes('/ipfs/')) {
+  if (url.pathname.startsWith('/ipfs')) {
     return url.pathname
   }
   
   // Subdomain
-  if (urlString.includes('.ipfs.')) {
+  if (url.hostname.includes('.ipfs.')) {
     const cid = url.hostname.split('.ipfs.')[0]
-    console.log('subdomain', `/ipfs/${cid}${url.pathname}`)
     return `/ipfs/${cid}${url.pathname}`
   }
 }
