@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>nftstorage service worker</title>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./nftstorage-sw.js');
+    }
+  </script>
+</head>
+<body class="sans-serif">
+  <h1 class="pa3 ma0 flex items-center">
+    <span class="f4 fw6 black">NFT STORAGE</span>
+    <span class="ml2 f5 fw7 code silver tracked">~~service worker~~</span>
+  </h1>
+  <figure class="pa4 ma3 ba dib">
+    <figcaption>
+      <code class="bg-light-gray dib br2 mb2 pa1">
+        &lt;img src="<a href="/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy" class="link blue fw5">/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy"</a> /&gt;
+      </code>
+    </a>
+    </figcaption>
+    <img src="/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy" alt="room guardian" style="width:766px" />
+  </figure>
+
+  <figure class="pa4 ma3 ba dib">
+    <figcaption>
+      <code class="bg-light-gray dib br2 mb2 pa1">
+        &lt;img src="<a href="https://nftstorage.link/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy" class="link blue fw5">https://nftstorage.link/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy"</a> /&gt;
+      </code>
+    </a>
+    </figcaption>
+    <img src="https://nftstorage.link/ipfs/bafkreigh2akiscaildcqabsyg3dfr6chu3fgpregiymsck7e7aqa4s52zy" alt="room guardian" style="width:766px" />
+  </figure>
+
+</body>
+</html>

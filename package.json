@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/nftstorage-sw.js",
   "scripts": {
-    "start": "cp src/nftstorage-sw.js example && serve example",
+    "start": "cp src/nftstorage-sw.js example/html && serve example/html",
     "test": "npm-run-all -p -r mock:nftstorage.link mock:dweb.link test:worker",
     "test:worker": "playwright-test --sw src/nftstorage-sw.js test/browser.test.js",
     "mock:nftstorage.link": "smoke -p 9091 test/mocks/nftstorage.link",
