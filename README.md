@@ -14,6 +14,10 @@ if ('serviceWorker' in navigator) {
 }
 ```
 
+## Use with Webpack
+
+For using `nftstorage-service-worker` on your project bundle with webpack, look into [webpack example](./example/webpack/).
+
 ## References
 
 - https://github.com/olizilla/see-other - a sw to resolve mutable dnslinks to their current immutable form for better caching.
