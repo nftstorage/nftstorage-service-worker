@@ -1,3 +1,7 @@
+const { unpack } = require('ipfs-car/unpack')
+const { CarReader } = require('@ipld/car')
+
+const CAR_GATEWAY_URL = 'https://ipfs.io'
 const GATEWAY_URL = 'https://nftstorage.link'
 const FALLBACK_URL = 'https://dweb.link'
 const OK_ERROR_STATUS = [
@@ -22,17 +26,54 @@ function getIPFSPath (url) {
   }
 }
 
+async function getCar(ipfsPath) {
+  const cid = ipfsPath.substr('/ipfs/'.length)
+  const res = await fetch(`${CAR_GATEWAY_URL}/api/v0/dag/export?arg=${cid}`, {
+    method: 'POST'
+  })
+
+  const arrayBuffer = await res.arrayBuffer()
+  const carReader = await CarReader.fromBytes(new Uint8Array(arrayBuffer))
+
+  const files = []
+  for await (const file of unpack(carReader)) {
+    // Iterate over files
+    files.push(file)
+  }
+
+  if (files.length > 1) {
+    return new Response('More than one file is not currently supported', {
+      status: 501,
+      headers: { 'Content-Type': 'text/plain' },
+    })
+  }
+
+  const blobParts = []
+  for await (const part of files[0].content()) {
+    blobParts.push(part)
+  }
+
+  return new Response(new Blob(blobParts))
+}
+
 /**
  * @param {URL} url
  */
-async function getIpfs(url) {
+async function getFromIpfs(url) {
   const ipfsPath = getIPFSPath(url)
+  // Get car
+
+  if (url.searchParams.get('format') === 'car') {
+    return getCar(ipfsPath)
+  }
+
   try {
     const response = await fetch(`${GATEWAY_URL}${ipfsPath}`)
     if (response.ok || OK_ERROR_STATUS.includes(response.status)) {
       return response
     }  
   } catch (_) { }
+  console.log('fallback url', FALLBACK_URL)
   
   return await fetch(`${FALLBACK_URL}${ipfsPath}`)
 }
@@ -49,11 +90,12 @@ async function cacheFirst(request) {
   const url = new URL(request.url)
   try {
     // Get from IPFS Gateways
-    const responseFromNetwork = await getIpfs(url)
+    const responseFromNetwork = await getFromIpfs(url)
     // Add to cache
     putInCache(request, responseFromNetwork.clone())
     return responseFromNetwork
   } catch (err) {
+    console.log(err)
     // when even the fallback response is not available,
     // there is nothing we can do, but we must always
     // return a Response object

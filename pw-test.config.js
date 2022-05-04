@@ -6,7 +6,7 @@ module.exports = {
     plugins: [
       replace({
         'https://nftstorage.link': 'http://127.0.0.1:9091',
-        'https://dweb.link': 'http://127.0.0.1:9092'
+        'https://dweb.link': 'http://127.0.0.1:9092',
       })
     ]
   },

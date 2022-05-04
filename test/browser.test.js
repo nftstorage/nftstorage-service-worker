@@ -34,4 +34,11 @@ describe('nftstorage-sw', () => {
     assert.isOk(res.ok, 'response is ok')
     assert.strictEqual(new URL(res.url).port, '9092')
   })
+  it('fetches car from dweb.link', async () => {
+    const res = await fetch('/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq?format=car')
+    assert.isOk(res.ok, 'response is ok')
+
+    const text = await res.text()
+    assert.strictEqual(text, 'Hello nft.storage! 😎')
+  })
 })
